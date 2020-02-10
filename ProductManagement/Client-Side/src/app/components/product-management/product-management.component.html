@@ -1,0 +1,53 @@
+<div id="headerMain">
+  <div id="header">
+    <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Create product</button>
+  </div>
+ </div>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Category type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of products.data | paginate: { itemsPerPage: 10, currentPage: currentPage, totalItems: products.totalCount }">
+        <th scope="row">{{item.id}}</th>
+        <td>{{item.name}}</td>
+        <td>{{item.categoryType}}</td>
+      </tr>
+    </tbody>
+    <div style="display: flex; justify-content: center;">
+      <pagination-controls (pageChange) = "pageChanged($event)"
+          previousLabel = ""
+          nextLabel = ""
+          directionLinks = "true"
+          autoHide = "false">
+      </pagination-controls>
+    </div>
+  </table>
+
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Create product</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body container-fluid new-product-fields">
+      <div class="row">
+        <input placeholder="Enter your name" [(ngModel)]="requestCreateProduct.name" class="col-6"/>
+        <select (change)="setSelectedCategory($event.target.value)" class="col-6">
+          <option value="-1" class="d-none">Select category</option>
+          <option *ngFor="let category of categories.categories" value={{category.id}}>
+            {{category.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click'); createProduct()">Create</button>
+    </div>
+  </ng-template>
